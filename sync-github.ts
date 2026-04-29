@@ -19,7 +19,16 @@ async function syncToGithub() {
   console.log(`🚀 Iniciando sincronia para ${owner}/${repo}...`);
 
   try {
-    // 1. Obter a referência do branch principal (main por padrão)
+    // Validar repositório e permissões
+    try {
+      const { data: repoInfo } = await octokit.rest.repos.get({ owner, repo });
+      console.log(`📡 Repositório verificado: ${repoInfo.full_name} (${repoInfo.private ? "privado" : "público"})`);
+    } catch (e: any) {
+      console.error(`❌ Erro ao acessar repositório ${owner}/${repo}: ${e.message}`);
+      process.exit(1);
+    }
+
+    // 1. Obter a referência do branch principal
     let baseTreeSha: string | undefined;
     let latestCommitSha: string | undefined;
 
@@ -40,68 +49,41 @@ async function syncToGithub() {
       console.log("Branch 'main' não encontrado. Criando repositório inicial...");
     }
 
-    // 2. Coletar arquivos (ignorando node_modules, dist, .git)
+    // 2. Coletar arquivos e enviar um por um (mais lento mas mais robusto para este ambiente)
     const files = await glob("**/*", {
-      ignore: ["node_modules/**", "dist/**", ".git/**"],
+      ignore: ["node_modules/**", "dist/**", ".git/**", ".env", "package-lock.json"],
       nodir: true,
+      dot: true
     });
 
-    const blobs = await Promise.all(
-      files.map(async (file) => {
-        const content = readFileSync(file);
-        const { data: blobData } = await octokit.rest.git.createBlob({
+    console.log(`📦 Enviando ${files.length} arquivos...`);
+
+    for (const file of files) {
+      const path = file.replace(/\\/g, "/");
+      try {
+        let sha: string | undefined;
+        try {
+          const { data } = await octokit.rest.repos.getContent({ owner, repo, path });
+          if (!Array.isArray(data)) sha = data.sha;
+        } catch (e) {}
+
+        await octokit.rest.repos.createOrUpdateFileContents({
           owner,
           repo,
-          content: content.toString("base64"),
-          encoding: "base64",
+          path,
+          message: `Sync: ${path}`,
+          content: readFileSync(file).toString("base64"),
+          sha
         });
-        return {
-          path: file.replace(/\\/g, "/"), // Compatibilidade Windows/Unix
-          mode: "100644" as const,
-          type: "blob" as const,
-          sha: blobData.sha,
-        };
-      })
-    );
-
-    // 3. Criar nova árvore
-    const { data: treeData } = await octokit.rest.git.createTree({
-      owner,
-      repo,
-      base_tree: baseTreeSha,
-      tree: blobs,
-    });
-
-    // 4. Criar o commit
-    const { data: newCommitData } = await octokit.rest.git.createCommit({
-      owner,
-      repo,
-      message: `Sync via webOS App Workspace - ${new Date().toLocaleString()}`,
-      tree: treeData.sha,
-      parents: latestCommitSha ? [latestCommitSha] : [],
-    });
-
-    // 5. Atualizar ou criar a referência
-    if (latestCommitSha) {
-      await octokit.rest.git.updateRef({
-        owner,
-        repo,
-        ref: "heads/main",
-        sha: newCommitData.sha,
-      });
-    } else {
-      await octokit.rest.git.createRef({
-        owner,
-        repo,
-        ref: "refs/heads/main",
-        sha: newCommitData.sha,
-      });
+        console.log(`  ✅ ${path}`);
+      } catch (e: any) {
+        console.error(`  ❌ Erro em ${path}: ${e.message}`);
+      }
     }
 
-    console.log("✅ Sincronia concluída com sucesso!");
+    console.log("✅ Sincronia concluída!");
   } catch (error: any) {
     console.error("❌ Falha na sincronia:", error.message);
-    if (error.response) console.error(error.response.data);
   }
 }
 
