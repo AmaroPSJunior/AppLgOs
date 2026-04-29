@@ -5,8 +5,5 @@
     "type": "web",
     "main": "index.html",
     "title": "Welcome App",
-    "icon": "icon.png",
-    "largeIcon": "largeIcon.png",
-    "bgImage": "backgroundImage.png",
     "resolution": "1920x1080"
 }
