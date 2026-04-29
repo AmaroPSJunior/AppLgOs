@@ -1,0 +1,44 @@
+name: Build and Package WebOS App
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build project
+      run: npm run build
+
+    - name: Prepare for packaging
+      run: |
+        cp public/appinfo.json dist/
+        # Se você tiver ícones, eles devem ser copiados aqui também
+        # cp assets/*.png dist/
+
+    - name: Install webOS CLI (Ares)
+      run: npm install -g @webos-tools/cli
+
+    - name: Package App (.ipk)
+      run: ares-package dist/ -o output/
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: webos-package
+        path: output/*.ipk

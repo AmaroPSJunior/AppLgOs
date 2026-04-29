@@ -1,0 +1,12 @@
+{
+    "id": "com.myapp.webos",
+    "version": "1.0.0",
+    "vendor": "MyCompany",
+    "type": "web",
+    "main": "index.html",
+    "title": "Welcome App",
+    "icon": "icon.png",
+    "largeIcon": "largeIcon.png",
+    "bgImage": "backgroundImage.png",
+    "resolution": "1920x1080"
+}

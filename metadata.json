@@ -1,0 +1,6 @@
+{
+  "name": "webOS Welcome App",
+  "description": "Um aplicativo básico para LG webOS com mensagem de boas-vindas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
