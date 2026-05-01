@@ -1,9 +1,8 @@
 {
     "id": "com.amaro.app",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "type": "web",
     "main": "index.html",
     "title": "Welcome Amaro",
-    "icon": "icon.png",
-    "uiRevision": 2
+    "icon": "icon.png"
 }
