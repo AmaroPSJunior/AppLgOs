@@ -1,57 +1,112 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-  </head>
-  <body>
-    <div id="app-container">
-      <div class="container">
-        <div class="header">
-          <div class="header-inner">
-            <h1 class="title">webOS Workspace</h1>
-            <p style="font-size: 10px; color: #94a3b8; margin-top: 5px;">
-              PROJECT: ULTRA-LEGACY MODE (VANILLA JS)
-            </p>
-            <button id="theme-toggle" style="margin-top: 10px; padding: 8px 15px; background: #e2e8f0; border: none; border-radius: 5px; cursor: pointer; font-size: 12px;">
-              Modo Escuro
-            </button>
-          </div>
-        </div>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>webOS Test App</title>
+    <style>
+        /* CSS Ultra Simples - Sem Flebox Avançado ou CSS Variables */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #000000;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        
+        .header {
+            background-color: #005eb8;
+            color: white;
+            padding: 20px;
+            font-size: 24px;
+        }
 
-        <div class="main-content">
-          <h2 id="welcome-title" class="welcome-text">Bem-vindo ao nosso app!</h2>
-          <p style="color: #64748b;">webOS TV Deployment Ready (v1.0.2)</p>
-          
-          <div style="margin-top: 40px; padding: 20px; background: #f8fafc; border-radius: 10px; color: #334155; font-size: 14px; border: 1px solid #e2e8f0;">
-              <strong style="display: block; margin-bottom: 10px;">Status do Sistema:</strong> 
-              Modo Vanilla JS Ativo (Sem dependências modernas).
-              <br/> Testado para WebOS 1.0 a 6.0.
-          </div>
-        </div>
+        .content {
+            padding: 40px;
+        }
 
-        <div class="footer-tags">
-          <div class="tag"><span class="dot red"></span> Sair</div>
-          <div class="tag"><span class="dot green"></span> Menu</div>
-          <div class="tag"><span class="dot yellow"></span> Opções</div>
-          <div class="tag"><span class="dot blue"></span> Ajuda</div>
-        </div>
-      </div>
+        .welcome-msg {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .status-box {
+            border: 2px solid #333;
+            padding: 20px;
+            margin: 20px auto;
+            width: 60%;
+            background-color: #f0f0f0;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 15px 0;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* Cores dos botões do controle */
+        .dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+        .red { background-color: red; }
+        .green { background-color: green; }
+        .yellow { background-color: yellow; }
+        .blue { background-color: blue; }
+        
+        .tag { margin: 0 10px; font-weight: bold; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        webOS Workspace v1.0.3
     </div>
 
-    <!-- Script de debug para webOS -->
-    <script>
-      window.onerror = function(msg, url, lineNo, columnNo, error) {
-        var message = 'ERR: ' + msg + ' at ' + lineNo;
-        console.error(message);
-        var div = document.createElement('div');
-        div.style.cssText = 'position:fixed;top:0;background:red;color:white;z-index:999';
-        div.innerText = message;
-        document.body.appendChild(div);
-      };
-    </script>
-    <script src="./src/app.js"></script>
-  </body>
-</html>
+    <div class="content">
+        <div id="display-text" class="welcome-msg">Bem-vindo ao nosso app!</div>
+        <p>Este layout foi simplificado para compatibilidade total.</p>
+        
+        <div class="status-box">
+            <strong>MODO DE SEGURANÇA ATIVO</strong><br>
+            Tudo embutido no HTML (Vanilla JS/CSS).
+        </div>
 
+        <button class="btn" id="main-btn">Trocar Cor de Fundo</button>
+    </div>
+
+    <div class="footer">
+        <span class="tag"><span class="dot red"></span> Sair</span>
+        <span class="tag"><span class="dot green"></span> Menu</span>
+        <span class="tag"><span class="dot yellow"></span> Opções</span>
+        <span class="tag"><span class="tag"><span class="dot blue"></span> Ajuda</span>
+    </div>
+
+    <script>
+        // JavaScript Purista (ES5) - Sem let, const ou arrow functions
+        window.onload = function() {
+            var btn = document.getElementById('main-btn');
+            var isGray = false;
+            
+            if (btn) {
+                btn.onclick = function() {
+                    isGray = !isGray;
+                    document.body.style.backgroundColor = isGray ? '#d1d5db' : '#ffffff';
+                    btn.innerHTML = isGray ? 'Voltar para Branco' : 'Trocar Cor de Fundo';
+                };
+            }
+            
+            console.log("App webOS Carregado em modo de segurança.");
+        };
+    </script>
+</body>
+</html>
