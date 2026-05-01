@@ -90,7 +90,6 @@ async function syncToGithub() {
       owner,
       repo,
       tree: validBlobs,
-      ...(baseTreeSha ? { base_tree: baseTreeSha } : {}),
     });
 
     // 4. Criar o commit único

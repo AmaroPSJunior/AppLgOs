@@ -31,5 +31,6 @@ async function fastSync() {
 
   await upload("appinfo.json");
   await upload("vite.config.ts");
+  await upload(".github/workflows/package.yml");
 }
 fastSync();
