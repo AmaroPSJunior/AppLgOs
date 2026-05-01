@@ -89,6 +89,7 @@ async function syncToGithub() {
     const { data: treeData } = await octokit.rest.git.createTree({
       owner,
       repo,
+      base_tree: baseTreeSha,
       tree: validBlobs,
     });
 
