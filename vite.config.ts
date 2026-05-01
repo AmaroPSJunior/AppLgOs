@@ -31,8 +31,7 @@ export default defineConfig(({mode}) => {
       terserOptions: {
         compress: {
           drop_console: false,
-          pure_funcs: [],
-          passes: 2
+          passes: 3
         },
         mangle: true,
         safari10: true
