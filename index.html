@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>webOS Welcome App</title>
     <link rel="stylesheet" href="style.css">
+    <script>
+      // Debug Script para webOS
+      window.onerror = function(msg, url, lineNo, columnNo, error) {
+        var message = [
+          'ERR: ' + msg,
+          'At: ' + url + ':' + lineNo + ':' + columnNo,
+          'Obj: ' + JSON.stringify(error)
+        ].join('\n');
+        console.error(message);
+        var debugDiv = document.getElementById('debug-console');
+        if (debugDiv) {
+          debugDiv.style.display = 'block';
+          debugDiv.innerText += message + '\n---\n';
+        }
+        return false;
+      };
+      console.log('webOS Debug Script Initialized');
+    </script>
 </head>
 <body class="light-mode">
     <div id="debug-console"></div>
