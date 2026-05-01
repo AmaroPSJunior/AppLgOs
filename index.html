@@ -162,12 +162,17 @@
                 <h1>TV Dash: <span id="tv-model" style="color:var(--accent)">Aguardando...</span></h1>
                 <p>Luna Bus Integration - Developer Mode</p>
             </div>
-            <div id="connection-status" style="padding: 15px 25px; background: #064e3b; color: #4ade80; border-radius: 50px; font-weight: bold; font-size: 18px;">
-                CONNECTED: LUNA BRIDGE
+            <div style="display: flex; gap: 15px;">
+                <button id="btn-iptv-launch" class="focusable" tabindex="0" style="padding: 15px 30px; background: var(--accent); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 18px;">
+                    🚀 LANÇAR IPTV PRO
+                </button>
+                <div id="connection-status" style="padding: 15px 25px; background: #064e3b; color: #4ade80; border-radius: 50px; font-weight: bold; font-size: 18px;">
+                    CONNECTED: LUNA BRIDGE
+                </div>
             </div>
         </header>
 
-        <div class="status-grid">
+        <div id="dashboard-view" class="status-grid">
             <div class="info-card focusable" tabindex="1" id="card-hw">
                 <h3>System Snapshot</h3>
                 <div id="hw-data">
@@ -202,6 +207,49 @@
                     <div class="data-key">Region: <span id="val-region-code">---</span></div>
                     <div class="data-value" id="val-clock" style="margin-top:25px">--:--</div>
                     <div class="data-key">TV System Clock</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- IPTV INTERFACE (HIDDEN BY DEFAULT) -->
+        <div id="iptv-view" style="display: none; flex: 1; flex-direction: column; gap: 20px;">
+            <div style="display: flex; gap: 20px; height: 100%;">
+                <!-- IPTV Menu -->
+                <div style="width: 300px; background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; display: flex; flex-direction: column; gap: 10px;">
+                    <div class="focusable iptv-menu-item" tabindex="10" data-cat="live" style="padding: 15px; border-radius: 10px; background: var(--accent); color: white; font-weight: bold;">LIVE TV</div>
+                    <div class="focusable iptv-menu-item" tabindex="11" data-cat="movies" style="padding: 15px; border-radius: 10px; background: rgba(255,255,255,0.1);">MOVIES</div>
+                    <div class="focusable iptv-menu-item" tabindex="12" data-cat="series" style="padding: 15px; border-radius: 10px; background: rgba(255,255,255,0.1);">SERIES</div>
+                    <div class="focusable iptv-menu-item" tabindex="13" id="btn-iptv-config" style="padding: 15px; border-radius: 10px; background: rgba(255,255,255,0.1); margin-top: auto;">⚙️ LIST SETTINGS</div>
+                </div>
+                
+                <!-- IPTV Content -->
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 20px;">
+                    <div id="iptv-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; overflow-y: auto; max-height: 600px; padding: 10px;">
+                        <!-- Canais aqui -->
+                    </div>
+                </div>
+
+                <!-- IPTV Player Overlay (Mini) -->
+                <div style="width: 400px; display: flex; flex-direction: column; gap: 20px;">
+                    <div style="width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 10px; overflow: hidden; border: 2px solid #334155;">
+                        <video id="iptv-player" style="width: 100%; height: 100%;" controls></video>
+                    </div>
+                    <div class="info-card" style="flex: 1;">
+                        <h3 id="playing-title">Nenhum Canal</h3>
+                        <p id="playing-desc" style="color: #94a3b8; font-size: 14px;">Selecione um item da lista para iniciar a reprodução.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL CONFIG LISTA -->
+        <div id="modal-list" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center;">
+            <div class="card" style="width: 600px; padding: 40px; background: var(--card);">
+                <h2 style="margin-bottom: 20px;">Configurar Lista IPTV</h2>
+                <input type="text" id="iptv-url-input" placeholder="https://exemplo.com/lista.m3u" style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #334155; background: #000; color: #fff; font-size: 18px; margin-bottom: 20px;">
+                <div style="display: flex; gap: 15px;">
+                    <button id="btn-save-list" class="focusable" tabindex="20" style="flex: 1; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold;">SALVAR E CARREGAR</button>
+                    <button id="btn-close-modal" class="focusable" tabindex="21" style="flex: 1; padding: 15px; background: #334155; color: white; border: none; border-radius: 8px; font-weight: bold;">CANCELAR</button>
                 </div>
             </div>
         </div>
