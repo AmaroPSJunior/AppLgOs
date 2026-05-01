@@ -21,7 +21,7 @@ export default defineConfig(({mode}) => {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
     },
     build: {
-      target: 'chrome38',
+      target: 'es5',
       outDir: 'dist',
       assetsDir: 'assets',
       minify: 'terser',
@@ -29,9 +29,11 @@ export default defineConfig(({mode}) => {
       cssCodeSplit: false,
       cssTarget: 'chrome38',
       terserOptions: {
+        ecma: 5,
         compress: {
           drop_console: false,
-          passes: 3
+          passes: 3,
+          keep_fnames: true
         },
         mangle: true,
         safari10: true

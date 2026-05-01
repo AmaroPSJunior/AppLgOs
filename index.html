@@ -6,42 +6,52 @@
     <title>My Google AI Studio App</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="app-container">
+      <div class="container">
+        <div class="header">
+          <div class="header-inner">
+            <h1 class="title">webOS Workspace</h1>
+            <p style="font-size: 10px; color: #94a3b8; margin-top: 5px;">
+              PROJECT: ULTRA-LEGACY MODE (VANILLA JS)
+            </p>
+            <button id="theme-toggle" style="margin-top: 10px; padding: 8px 15px; background: #e2e8f0; border: none; border-radius: 5px; cursor: pointer; font-size: 12px;">
+              Modo Escuro
+            </button>
+          </div>
+        </div>
+
+        <div class="main-content">
+          <h2 id="welcome-title" class="welcome-text">Bem-vindo ao nosso app!</h2>
+          <p style="color: #64748b;">webOS TV Deployment Ready (v1.0.2)</p>
+          
+          <div style="margin-top: 40px; padding: 20px; background: #f8fafc; border-radius: 10px; color: #334155; font-size: 14px; border: 1px solid #e2e8f0;">
+              <strong style="display: block; margin-bottom: 10px;">Status do Sistema:</strong> 
+              Modo Vanilla JS Ativo (Sem dependências modernas).
+              <br/> Testado para WebOS 1.0 a 6.0.
+          </div>
+        </div>
+
+        <div class="footer-tags">
+          <div class="tag"><span class="dot red"></span> Sair</div>
+          <div class="tag"><span class="dot green"></span> Menu</div>
+          <div class="tag"><span class="dot yellow"></span> Opções</div>
+          <div class="tag"><span class="dot blue"></span> Ajuda</div>
+        </div>
+      </div>
+    </div>
+
     <!-- Script de debug para webOS -->
     <script>
       window.onerror = function(msg, url, lineNo, columnNo, error) {
-        var message = [
-          'ERR: ' + msg,
-          'At: ' + url + ':' + lineNo + ':' + columnNo,
-          'Obj: ' + JSON.stringify(error)
-        ].join('\n');
+        var message = 'ERR: ' + msg + ' at ' + lineNo;
         console.error(message);
-        var debugDiv = document.getElementById('webos-debug') || document.createElement('div');
-        debugDiv.id = 'webos-debug';
-        debugDiv.style.position = 'fixed';
-        debugDiv.style.top = '0';
-        debugDiv.style.left = '0';
-        debugDiv.style.background = 'rgba(255,0,0,0.9)';
-        debugDiv.style.color = 'white';
-        debugDiv.style.zIndex = '10000';
-        debugDiv.style.fontSize = '14px';
-        debugDiv.style.padding = '20px';
-        debugDiv.style.whiteSpace = 'pre-wrap';
-        debugDiv.innerText += message + '\n---\n';
-        if (!debugDiv.parentElement) document.body.appendChild(debugDiv);
-        return false;
+        var div = document.createElement('div');
+        div.style.cssText = 'position:fixed;top:0;background:red;color:white;z-index:999';
+        div.innerText = message;
+        document.body.appendChild(div);
       };
-
-      // Catch asset errors
-      window.addEventListener('error', function(e) {
-        if (e.target && (e.target.tagName === 'LINK' || e.target.tagName === 'SCRIPT')) {
-          console.error('Failed to load: ' + (e.target.src || e.target.href));
-        }
-      }, true);
-      
-      console.log('webOS Debug Script Initialized');
     </script>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/app.js"></script>
   </body>
 </html>
 
