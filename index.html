@@ -1,65 +1,219 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bem-vindo Amaro</title>
+    <title>webOS Luna Explorer</title>
+    <!-- Bridge oficial para APIs da LG TV -->
+    <script src="webOSTVjs-1.2.4/webOSTV.js" charset="utf-8"></script>
     <style>
-        /* CSS Clássico compatível com Chrome 38+ */
+        :root {
+            --bg: #05070a;
+            --accent: #cf0652; /* Cor padrão LG */
+            --card: #12151c;
+            --text: #e2e8f0;
+            --highlight: #3b82f6;
+        }
+
         body {
-            background-color: #0c0e14;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            width: 1920px; /* Tamanho padrão Full HD para TV */
-            height: 1080px;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0; padding: 0;
+            width: 1920px; height: 1080px;
             overflow: hidden;
-            display: table; /* Fallback para centralização se flex falhar */
+            display: flex;
         }
-        .container {
-            display: table-cell;
-            vertical-align: middle;
-            text-align: center;
-            background: radial-gradient(circle at center, #1e293b 0%, #0c0e14 100%);
+
+        /* Sidebar de Documentação */
+        .sidebar {
+            width: 450px;
+            background: var(--card);
+            border-right: 2px solid #1e293b;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
         }
-        h1 {
-            font-size: 100px;
-            margin: 0;
-            color: #ffffff;
-            font-weight: 800;
+
+        .sidebar h2 { color: var(--accent); font-size: 24px; margin-bottom: 30px; border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
+        
+        .doc-item {
+            margin-bottom: 25px;
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
         }
-        .highlight {
-            color: #3b82f6;
+
+        .doc-item strong { display: block; margin-bottom: 5px; color: #fff; }
+        .doc-item code { color: var(--highlight); display: block; margin-top: 5px; font-size: 14px; word-break: break-all; }
+
+        /* Dashboard Principal */
+        .main-content {
+            flex: 1;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
         }
-        p {
-            font-size: 40px;
-            color: #64748b;
+
+        header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 50px; }
+        .title-group h1 { font-size: 64px; margin: 0; font-weight: 800; }
+        .title-group p { color: #64748b; font-size: 24px; margin-top: 10px; text-transform: uppercase; letter-spacing: 4px; }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            flex: 1;
+        }
+
+        .info-card {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 35px;
+            border: 3px solid transparent;
+            transition: all 0.2s ease-out;
+        }
+
+        /* Focus state para controle remoto */
+        .info-card:focus {
+            border-color: var(--accent);
+            transform: scale(1.05);
+            box-shadow: 0 20px 50px rgba(207, 6, 82, 0.4);
+            outline: none;
+            z-index: 10;
+        }
+
+        .info-card h3 { color: #94a3b8; text-transform: uppercase; font-size: 18px; letter-spacing: 2px; margin-bottom: 20px; }
+        .data-value { font-size: 38px; font-weight: bold; color: #fff; }
+        .data-key { color: #475569; font-size: 20px; margin-top: 5px; }
+
+        .luna-log {
             margin-top: 20px;
-            letter-spacing: 5px;
-            text-transform: uppercase;
+            background: #000;
+            padding: 20px;
+            height: 250px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #4ade80;
+            overflow-y: hidden;
+            border: 1px solid #1e293b;
         }
-        .footer {
-            position: absolute;
-            bottom: 50px;
-            width: 100%;
-            text-align: center;
-            font-size: 20px;
-            color: #334155;
+
+        footer {
+            margin-top: 40px;
+            display: flex;
+            gap: 50px;
+            border-top: 1px solid #1e293b;
+            padding-top: 30px;
         }
+
+        .remote-btn {
+            display: flex; align-items: center; gap: 15px; font-weight: bold; font-size: 20px; color: #94a3b8;
+        }
+        .color-dot { width: 24px; height: 24px; border-radius: 50%; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Bem-vindo <span class="highlight">Amaro!</span></h1>
-        <p>webOS TV Native Experience</p>
+<body id="app-body">
+    <div class="sidebar">
+        <h2>LUNA API MAP</h2>
+        
+        <div class="doc-item">
+            <strong>System Info</strong>
+            <span>Modelo e versão do webOS.</span>
+            <code>luna://com.webos.service.tv.systemproperty/getSystemInfo</code>
+        </div>
+
+        <div class="doc-item">
+            <strong>Connection Manager</strong>
+            <span>Status IP e rede física.</span>
+            <code>luna://com.webos.service.connectionmanager/getStatus</code>
+        </div>
+
+        <div class="doc-item">
+            <strong>Audio Service</strong>
+            <span>Volume e dispositivos de saída.</span>
+            <code>luna://com.webos.service.audio/getStatus</code>
+        </div>
+
+        <div class="doc-item">
+            <strong>App Manager</strong>
+            <span>Listar outros apps instalados.</span>
+            <code>luna://com.webos.applicationManager/listApps</code>
+        </div>
+
+        <div class="doc-item">
+            <strong>SAM (App Execution)</strong>
+            <span>Lançar ou fechar aplicações.</span>
+            <code>luna://com.webos.service.applicationManager/launch</code>
+        </div>
+
+        <div class="doc-item">
+            <strong>Notifications</strong>
+            <span>Exibir toasts nativos na TV.</span>
+            <code>luna://com.webos.notification/createToast</code>
+        </div>
     </div>
-    <div class="footer">
-        Versão 1.2 - Pure Legacy HTML
+
+    <div class="main-content">
+        <header>
+            <div class="title-group">
+                <h1>TV Dash: <span id="tv-model" style="color:var(--accent)">Aguardando...</span></h1>
+                <p>Luna Bus Integration - Developer Mode</p>
+            </div>
+            <div id="connection-status" style="padding: 15px 25px; background: #064e3b; color: #4ade80; border-radius: 50px; font-weight: bold; font-size: 18px;">
+                CONNECTED: LUNA BRIDGE
+            </div>
+        </header>
+
+        <div class="status-grid">
+            <div class="info-card focusable" tabindex="1" id="card-hw">
+                <h3>System Snapshot</h3>
+                <div id="hw-data">
+                    <div class="data-value" id="val-webos">N/A</div>
+                    <div class="data-key">Firmware Version</div>
+                    <div class="data-value" id="val-sdk" style="margin-top:25px">N/A</div>
+                    <div class="data-key">webOS SDK Level</div>
+                </div>
+            </div>
+
+            <div class="info-card focusable" tabindex="2" id="card-net">
+                <h3>Networking</h3>
+                <div id="net-data">
+                    <div class="data-value" id="val-ip">0.0.0.0</div>
+                    <div class="data-key">Internal IPv4</div>
+                    <div class="data-value" id="val-wifi" style="margin-top:25px">Checking...</div>
+                    <div class="data-key">Signal Type</div>
+                </div>
+            </div>
+
+            <div class="info-card focusable" tabindex="3" id="card-log">
+                <h3>Telemetry Log</h3>
+                <div class="luna-log" id="luna-console">
+                    > Monitoring Luna Bus events...
+                </div>
+            </div>
+
+            <div class="info-card focusable" tabindex="4" id="card-geo">
+                <h3>Luna Service Tester</h3>
+                <div id="sys-data">
+                    <div class="data-value" id="val-country" style="font-size:24px">Press OK to test Toast</div>
+                    <div class="data-key">Region: <span id="val-region-code">---</span></div>
+                    <div class="data-value" id="val-clock" style="margin-top:25px">--:--</div>
+                    <div class="data-key">TV System Clock</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="remote-btn"><div class="color-dot" style="background:#ef4444"></div> REFRESH</div>
+            <div class="remote-btn"><div class="color-dot" style="background:#22c55e"></div> CLEAR LOG</div>
+            <div class="remote-btn"><div class="color-dot" style="background:#f59e0b"></div> HELP</div>
+            <div class="remote-btn"><div class="color-dot" style="background:#3b82f6"></div> QUIT</div>
+        </footer>
     </div>
-    <script>
-        // Log simples para debug no Inspector
-        console.log("App carregado com sucesso!");
-    </script>
+
+    <script src="main.js"></script>
 </body>
 </html>
