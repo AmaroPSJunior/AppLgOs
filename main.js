@@ -143,7 +143,35 @@
 
     function handleKeyDown(e) {
         const key = e.keyCode;
+        const modal = document.getElementById('modal-list');
+        const isModalOpen = modal && modal.style.display === 'flex';
+        
         log('IRC Key: ' + key);
+
+        // Se o modal estiver aberto, focar apenas nos elementos do modal
+        if (isModalOpen) {
+            if (key === 13) { // Enter
+                if (currentFocus === 21) saveList();
+                else if (currentFocus === 22) closeModal();
+                return;
+            }
+            if (key === 461 || key === 27) { // Back/ESC
+                closeModal();
+                return;
+            }
+            if (key === 37) { // Left
+                if (currentFocus === 22) currentFocus = 21;
+                updateFocus();
+            } else if (key === 39) { // Right
+                if (currentFocus === 21) currentFocus = 22;
+                updateFocus();
+            } else if (key === 38 || key === 40) { // Up/Down
+                if (currentFocus === 21 || currentFocus === 22) currentFocus = 20;
+                else currentFocus = 21;
+                updateFocus();
+            }
+            return;
+        }
 
         if (document.activeElement.tagName === 'INPUT' && key !== 13 && key !== 27 && key !== 461) return;
 
@@ -151,74 +179,57 @@
             case 37: // Left
                 if (isIptvMode) {
                     if (currentFocus >= 100) {
-                        if (currentFocus % 4 === 0) { // Na primeira coluna do grid
-                            currentFocus = 10; // Volta pro menu
-                        } else {
-                            currentFocus--;
-                        }
-                    } else if (currentFocus === 21 || currentFocus === 22) {
-                        currentFocus = 21;
+                        if (currentFocus % 4 === 0) currentFocus = 10; // Volta pro menu
+                        else currentFocus--;
                     }
                 } else if (currentFocus > 1) {
                     currentFocus--;
                 }
-                updateFocus();
                 break;
             
             case 39: // Right
                 if (isIptvMode) {
-                    if (currentFocus >= 10 && currentFocus <= 13) {
-                        currentFocus = 100; // Vai pro grid
-                    } else if (currentFocus >= 100) {
-                        currentFocus++;
-                    } else if (currentFocus === 21) {
-                        currentFocus = 22;
-                    }
+                    if (currentFocus >= 10 && currentFocus <= 13) currentFocus = 100;
+                    else if (currentFocus >= 100) currentFocus++;
                 } else if (currentFocus < totalCards) {
                     currentFocus++;
+                } else if (currentFocus === totalCards) {
+                    currentFocus = 5; // Launch button
                 }
-                updateFocus();
                 break;
 
             case 38: // Up
                 if (isIptvMode) {
                     if (currentFocus >= 104) currentFocus -= 4;
                     else if (currentFocus >= 100) currentFocus = 100;
-                    else if (currentFocus > 10 && currentFocus <= 13) currentFocus--;
+                    else if (currentFocus > 10) currentFocus--;
+                    else if (currentFocus === 10) currentFocus = 5; // Header
                 } else if (currentFocus > 2) {
                     currentFocus -= 2;
                 }
-                updateFocus();
                 break;
 
             case 40: // Down
                 if (isIptvMode) {
-                    if (currentFocus >= 10 && currentFocus < 13) currentFocus++;
+                    if (currentFocus === 5) currentFocus = 10;
+                    else if (currentFocus >= 10 && currentFocus < 13) currentFocus++;
                     else if (currentFocus >= 100) currentFocus += 4;
                 } else if (currentFocus <= 2) {
                     currentFocus += 2;
                 }
-                updateFocus();
                 break;
 
             case 13: // Enter
-                const target = document.activeElement;
-                if (currentFocus === 1) {
+                if (currentFocus === 5) {
                     toggleIptvView(!isIptvMode);
                 } else if (currentFocus >= 10 && currentFocus <= 12) {
                     const cats = ['live', 'movies', 'series'];
                     activeCategory = cats[currentFocus - 10];
                     renderIptvGrid();
                 } else if (currentFocus === 13) {
-                    document.getElementById('modal-list').style.display = 'flex';
+                    modal.style.display = 'flex';
                     currentFocus = 20;
                     updateFocus();
-                } else if (currentFocus === 20) {
-                    // Do nothing, let user type
-                } else if (currentFocus === 21) {
-                    saveList();
-                } else if (currentFocus === 22) {
-                    closeModal();
                 } else if (currentFocus >= 100) {
                     const idx = currentFocus - 100;
                     const items = iptvData[activeCategory] || [];
@@ -230,30 +241,34 @@
 
             case 461: // Back (webOS)
             case 27:  // ESC
-                if (document.getElementById('modal-list').style.display === 'flex') {
-                    closeModal();
-                } else if (isIptvMode) {
+                if (isIptvMode) {
                     toggleIptvView(false);
                 } else {
                     if (window.close) window.close();
                 }
                 break;
         }
+        updateFocus();
     }
 
     function saveList() {
-        const url = document.getElementById('iptv-url-input').value;
+        const urlInput = document.getElementById('iptv-url-input');
+        const url = urlInput ? urlInput.value.trim() : "";
         if (url) {
-            loadIptvList(url);
+            log('Saving URL: ' + url);
+            localStorage.setItem('iptv_url', url);
             closeModal();
-            currentFocus = 10;
-            updateFocus();
+            loadIptvList(url);
+        } else {
+            log('Save ignored: Empty URL');
         }
     }
 
     function closeModal() {
-        document.getElementById('modal-list').style.display = 'none';
-        currentFocus = 13;
+        const modal = document.getElementById('modal-list');
+        if (modal) modal.style.display = 'none';
+        log('Modal closed');
+        currentFocus = 13; // Retorna para CONFIGURATIONS
         updateFocus();
     }
 
