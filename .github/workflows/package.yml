@@ -1,0 +1,34 @@
+name: Build and Package WebOS App
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install webOS CLI (Ares)
+      run: npm install -g @webos-tools/cli
+
+    - name: Package App (.ipk)
+      run: |
+        mkdir -p output
+        ares-package . -e "node_modules" -e ".git" -e ".github" -e "output" -o output/ --no-minify
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: webos-app-ipk
+        path: output/*.ipk
+        if-no-files-found: error
