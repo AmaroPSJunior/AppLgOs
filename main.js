@@ -148,11 +148,21 @@
         
         log('IRC Key: ' + key);
 
+        // Atalho Botão Vermelho: Toggle IPTV
+        if (key === 403) {
+            toggleIptvView(!isIptvMode);
+            return;
+        }
+
         // Se o modal estiver aberto, focar apenas nos elementos do modal
         if (isModalOpen) {
             if (key === 13) { // Enter
                 if (currentFocus === 21) saveList();
                 else if (currentFocus === 22) closeModal();
+                else if (currentFocus === 20) {
+                    currentFocus = 21; // Pula do input pros botões ao dar OK no input (teclado virtual fecha)
+                }
+                updateFocus();
                 return;
             }
             if (key === 461 || key === 27) { // Back/ESC
@@ -165,9 +175,11 @@
             } else if (key === 39) { // Right
                 if (currentFocus === 21) currentFocus = 22;
                 updateFocus();
-            } else if (key === 38 || key === 40) { // Up/Down
+            } else if (key === 38) { // Up
                 if (currentFocus === 21 || currentFocus === 22) currentFocus = 20;
-                else currentFocus = 21;
+                updateFocus();
+            } else if (key === 40) { // Down
+                if (currentFocus === 20) currentFocus = 21;
                 updateFocus();
             }
             return;
@@ -179,11 +191,12 @@
             case 37: // Left
                 if (isIptvMode) {
                     if (currentFocus >= 100) {
-                        if (currentFocus % 4 === 0) currentFocus = 10; // Volta pro menu
+                        if (currentFocus % 4 === 0) currentFocus = 10;
                         else currentFocus--;
                     }
-                } else if (currentFocus > 1) {
-                    currentFocus--;
+                } else {
+                    if (currentFocus === 2) currentFocus = 1;
+                    else if (currentFocus === 4) currentFocus = 3;
                 }
                 break;
             
@@ -191,10 +204,10 @@
                 if (isIptvMode) {
                     if (currentFocus >= 10 && currentFocus <= 13) currentFocus = 100;
                     else if (currentFocus >= 100) currentFocus++;
-                } else if (currentFocus < totalCards) {
-                    currentFocus++;
-                } else if (currentFocus === totalCards) {
-                    currentFocus = 5; // Launch button
+                } else {
+                    if (currentFocus === 1) currentFocus = 2;
+                    else if (currentFocus === 3) currentFocus = 4;
+                    else if (currentFocus === 2 || currentFocus === 4) currentFocus = 5;
                 }
                 break;
 
@@ -203,9 +216,11 @@
                     if (currentFocus >= 104) currentFocus -= 4;
                     else if (currentFocus >= 100) currentFocus = 100;
                     else if (currentFocus > 10) currentFocus--;
-                    else if (currentFocus === 10) currentFocus = 5; // Header
-                } else if (currentFocus > 2) {
-                    currentFocus -= 2;
+                    else if (currentFocus === 10) currentFocus = 5;
+                } else {
+                    if (currentFocus === 3) currentFocus = 1;
+                    else if (currentFocus === 4) currentFocus = 2;
+                    else if (currentFocus === 1 || currentFocus === 2) currentFocus = 5;
                 }
                 break;
 
@@ -214,8 +229,10 @@
                     if (currentFocus === 5) currentFocus = 10;
                     else if (currentFocus >= 10 && currentFocus < 13) currentFocus++;
                     else if (currentFocus >= 100) currentFocus += 4;
-                } else if (currentFocus <= 2) {
-                    currentFocus += 2;
+                } else {
+                    if (currentFocus === 5) currentFocus = 1;
+                    else if (currentFocus === 1) currentFocus = 3;
+                    else if (currentFocus === 2) currentFocus = 4;
                 }
                 break;
 
