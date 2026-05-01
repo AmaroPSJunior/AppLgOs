@@ -1,11 +1,9 @@
 {
-    "id": "com.myapp.webos",
+    "id": "com.amaro.app",
     "version": "1.0.0",
-    "vendor": "MyCompany",
-    "type": "web",
-    "main": "index.html",
-    "title": "Welcome App",
+    "type": "native",
+    "main": "native_app",
+    "title": "Bem-vindo Amaro Native",
     "icon": "icon.png",
-    "resolution": "1920x1080",
-    "inspectable": true
+    "uiRevision": 2
 }
