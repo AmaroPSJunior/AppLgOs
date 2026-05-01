@@ -13,7 +13,7 @@ export default defineConfig(({mode}) => {
       legacy({
         targets: ['chrome > 38', 'safari > 7'],
         additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
-        renderModernChunks: true
+        renderModernChunks: false
       })
     ],
     base: "./",

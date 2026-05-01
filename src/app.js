@@ -1,28 +1,40 @@
 /* 
- * App JS Puro - Compatibilidade Máxima webOS (ES5)
+ * App webOS - ES5 Purista (Compatibilidade Total)
  */
-function initApp() {
-    var isDark = false;
-    var root = document.getElementById('app-container');
-    
-    // Elementos do DOM
-    var btnToggle = document.getElementById('theme-toggle');
-    var welcomeTitle = document.getElementById('welcome-title');
+(function() {
+    function init() {
+        var isDark = false;
+        var btnToggle = document.getElementById('theme-toggle');
+        
+        if (!btnToggle) {
+            // Se o botão ainda não existir, tenta novamente em 100ms
+            setTimeout(init, 100);
+            return;
+        }
 
-    if (btnToggle) {
         btnToggle.onclick = function() {
             isDark = !isDark;
             if (isDark) {
                 document.body.className = 'dark';
-                btnToggle.innerText = 'Modo Claro';
+                btnToggle.innerHTML = 'Modo Claro';
+                btnToggle.style.background = '#334155';
+                btnToggle.style.color = '#ffffff';
             } else {
                 document.body.className = '';
-                btnToggle.innerText = 'Modo Escuro';
+                btnToggle.innerHTML = 'Modo Escuro';
+                btnToggle.style.background = '#e2e8f0';
+                btnToggle.style.color = '#000000';
             }
         };
+        
+        // Log básico para o Inspector
+        console.log("WebOS App Inicializado: v1.0.2");
     }
-    
-    console.log('App webOS iniciado com sucesso.');
-}
 
-window.onload = initApp;
+    // Executa quando o DOM estiver pronto
+    if (document.readyState === 'complete') {
+        init();
+    } else {
+        window.onload = init;
+    }
+})();
