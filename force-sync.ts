@@ -14,7 +14,7 @@ async function forceSync() {
     "main.js",
     "appinfo.json",
     "package.json",
-    "public/icon.png",
+    "icon.png",
     ".github/workflows/package.yml"
   ];
 

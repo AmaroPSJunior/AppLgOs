@@ -50,7 +50,7 @@ async function syncToGithub() {
     }
 
     // 2. Coletar arquivos
-    const files = ["index.html", "appinfo.json", "package.json", "main.js", "public/icon.png", ".github/workflows/package.yml"];
+    const files = ["index.html", "appinfo.json", "package.json", "main.js", "icon.png"];
     
     // 2. Criar Blobs para todos os arquivos em paralelo
     console.log(`📦 Criando blobs para ${files.length} arquivos...`);
