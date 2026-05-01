@@ -1,9 +1,9 @@
 {
     "id": "com.amaro.app",
     "version": "1.0.0",
-    "type": "native",
-    "main": "native_app",
-    "title": "Bem-vindo Amaro Native",
+    "type": "web",
+    "main": "index.html",
+    "title": "Welcome Amaro",
     "icon": "icon.png",
     "uiRevision": 2
 }
