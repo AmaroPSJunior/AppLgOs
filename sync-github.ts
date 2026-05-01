@@ -51,7 +51,7 @@ async function syncToGithub() {
 
     // 2. Coletar arquivos
     const files = await glob("**/*", {
-      ignore: ["node_modules/**", "dist/**", ".git/**", ".env", "package-lock.json"],
+      ignore: ["node_modules/**", "dist/**", ".git/**", ".env", "package-lock.json", ".github/**"],
       nodir: true,
       dot: true
     });
