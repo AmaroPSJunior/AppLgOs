@@ -27,9 +27,8 @@ jobs:
 
     - name: Prepare for packaging
       run: |
-        cp public/appinfo.json dist/
-        # Se você tiver ícones, eles devem ser copiados aqui também
-        # cp assets/*.png dist/
+        cp appinfo.json dist/
+        cp public/icon.png dist/
 
     - name: Install webOS CLI (Ares)
       run: npm install -g @webos-tools/cli
