@@ -1,47 +1,97 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <!-- Script de debug para webOS -->
-    <script>
-      window.onerror = function(msg, url, lineNo, columnNo, error) {
-        var message = [
-          'ERR: ' + msg,
-          'At: ' + url + ':' + lineNo + ':' + columnNo,
-          'Obj: ' + JSON.stringify(error)
-        ].join('\n');
-        console.error(message);
-        var debugDiv = document.getElementById('webos-debug') || document.createElement('div');
-        debugDiv.id = 'webos-debug';
-        debugDiv.style.position = 'fixed';
-        debugDiv.style.top = '0';
-        debugDiv.style.left = '0';
-        debugDiv.style.background = 'rgba(255,0,0,0.9)';
-        debugDiv.style.color = 'white';
-        debugDiv.style.zIndex = '10000';
-        debugDiv.style.fontSize = '14px';
-        debugDiv.style.padding = '20px';
-        debugDiv.style.whiteSpace = 'pre-wrap';
-        debugDiv.innerText += message + '\n---\n';
-        if (!debugDiv.parentElement) document.body.appendChild(debugDiv);
-        return false;
-      };
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>webOS Welcome App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="light-mode">
+    <div id="debug-console"></div>
 
-      // Catch asset errors
-      window.addEventListener('error', function(e) {
-        if (e.target && (e.target.tagName === 'LINK' || e.target.tagName === 'SCRIPT')) {
-          console.error('Failed to load: ' + (e.target.src || e.target.href));
-        }
-      }, true);
-      
-      console.log('webOS Debug Script Initialized');
-    </script>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-left">
+                <div class="logo">wO</div>
+                <div class="app-info">
+                    <h1>webOS Developer Workspace</h1>
+                    <p>PROJECT: BASIC WELCOME APP</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <button id="theme-toggle" aria-label="Alternar Tema">
+                    <span id="theme-icon">🌙</span>
+                </button>
+                <div class="status-badge">
+                    <span class="dot"></span>
+                    TV Connection: Active
+                </div>
+                <div class="version-tag">v1.1</div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Left Column -->
+            <aside class="sidebar-left">
+                <section class="card">
+                    <h3>App Manifest</h3>
+                    <pre><code>{
+  "id": "com.myapp.webos",
+  "version": "1.0.0",
+  "type": "web",
+  "main": "index.html",
+  "title": "Welcome Amaro"
+}</code></pre>
+                </section>
+                <section class="card">
+                    <h3>Pipeline</h3>
+                    <div class="pipeline-item">
+                        <div class="spinner"></div>
+                        <span>Packing .ipk...</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 85%"></div>
+                    </div>
+                </section>
+            </aside>
+
+            <!-- Center -->
+            <section class="tv-preview">
+                <div class="preview-label">TV Screen Preview</div>
+                <div class="preview-content">
+                    <h2 id="welcome-text">Bem-vindo Amaro!</h2>
+                    <p>webOS TV Deployment Ready</p>
+                </div>
+                <div class="preview-footer">
+                    <div class="decoration-line"></div>
+                </div>
+            </section>
+
+            <!-- Right -->
+            <aside class="sidebar-right">
+                <section class="card dark-card">
+                    <h3>Manual Installation</h3>
+                    <ul class="steps">
+                        <li><strong>01 Dev Mode:</strong> Ative o Developer Mode na TV.</li>
+                        <li><strong>02 IPK:</strong> Gere o pacote usando ares-package.</li>
+                        <li><strong>03 USB:</strong> Copie para /developer/apps/.</li>
+                        <li><strong>04 CLI:</strong> Use ares-install.</li>
+                    </ul>
+                    <p class="note">Consulte a documentação LG para detalhes.</p>
+                </section>
+            </aside>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <div class="btn-help"><span class="c-red">●</span> SAIR</div>
+            <div class="btn-help"><span class="c-green">●</span> MENU</div>
+            <div class="btn-help"><span class="c-yellow">●</span> OPÇÕES</div>
+            <div class="btn-help"><span class="c-blue">●</span> AJUDA</div>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
 </html>
-
