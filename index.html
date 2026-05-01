@@ -11,26 +11,35 @@
     <script>
       window.onerror = function(msg, url, lineNo, columnNo, error) {
         var message = [
-          'Message: ' + msg,
-          'URL: ' + url,
-          'Line: ' + lineNo,
-          'Column: ' + columnNo,
-          'Error object: ' + JSON.stringify(error)
-        ].join(' - ');
+          'ERR: ' + msg,
+          'At: ' + url + ':' + lineNo + ':' + columnNo,
+          'Obj: ' + JSON.stringify(error)
+        ].join('\n');
         console.error(message);
-        var debugDiv = document.createElement('div');
+        var debugDiv = document.getElementById('webos-debug') || document.createElement('div');
+        debugDiv.id = 'webos-debug';
         debugDiv.style.position = 'fixed';
         debugDiv.style.top = '0';
         debugDiv.style.left = '0';
-        debugDiv.style.background = 'red';
+        debugDiv.style.background = 'rgba(255,0,0,0.9)';
         debugDiv.style.color = 'white';
-        debugDiv.style.zIndex = '9999';
-        debugDiv.style.fontSize = '12px';
-        debugDiv.style.padding = '10px';
-        debugDiv.innerText = message;
-        document.body.appendChild(debugDiv);
+        debugDiv.style.zIndex = '10000';
+        debugDiv.style.fontSize = '14px';
+        debugDiv.style.padding = '20px';
+        debugDiv.style.whiteSpace = 'pre-wrap';
+        debugDiv.innerText += message + '\n---\n';
+        if (!debugDiv.parentElement) document.body.appendChild(debugDiv);
         return false;
       };
+
+      // Catch asset errors
+      window.addEventListener('error', function(e) {
+        if (e.target && (e.target.tagName === 'LINK' || e.target.tagName === 'SCRIPT')) {
+          console.error('Failed to load: ' + (e.target.src || e.target.href));
+        }
+      }, true);
+      
+      console.log('webOS Debug Script Initialized');
     </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>

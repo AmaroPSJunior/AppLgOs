@@ -21,11 +21,22 @@ export default defineConfig(({mode}) => {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
     },
     build: {
-      target: 'es2015',
+      target: 'chrome38',
       outDir: 'dist',
       assetsDir: 'assets',
       minify: 'terser',
+      sourcemap: false,
       cssCodeSplit: false,
+      cssTarget: 'chrome38',
+      terserOptions: {
+        compress: {
+          drop_console: false,
+          pure_funcs: [],
+          passes: 2
+        },
+        mangle: true,
+        safari10: true
+      }
     },
     resolve: {
       alias: {
