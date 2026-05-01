@@ -51,7 +51,7 @@ async function syncToGithub() {
 
     // 2. Coletar arquivos
     const files = await glob("**/*", {
-      ignore: ["node_modules/**", "dist/**", ".git/**", ".env", ".github/**"],
+      ignore: ["node_modules/**", "dist/**", ".git/**", ".env", "package-lock.json", ".github/**"],
       nodir: true,
       dot: true
     });
@@ -90,6 +90,7 @@ async function syncToGithub() {
       owner,
       repo,
       tree: validBlobs,
+      ...(baseTreeSha ? { base_tree: baseTreeSha } : {}),
     });
 
     // 4. Criar o commit único

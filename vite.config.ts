@@ -12,7 +12,8 @@ export default defineConfig(({mode}) => {
       tailwindcss(),
       legacy({
         targets: ['chrome > 38', 'safari > 7'],
-        additionalLegacyPolyfills: ['regenerator-runtime/runtime']
+        additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
+        renderModernChunks: true
       })
     ],
     base: "./",
@@ -24,6 +25,7 @@ export default defineConfig(({mode}) => {
       outDir: 'dist',
       assetsDir: 'assets',
       minify: 'terser',
+      cssCodeSplit: false,
     },
     resolve: {
       alias: {

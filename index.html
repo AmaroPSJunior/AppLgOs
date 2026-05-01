@@ -7,6 +7,31 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Script de debug para webOS -->
+    <script>
+      window.onerror = function(msg, url, lineNo, columnNo, error) {
+        var message = [
+          'Message: ' + msg,
+          'URL: ' + url,
+          'Line: ' + lineNo,
+          'Column: ' + columnNo,
+          'Error object: ' + JSON.stringify(error)
+        ].join(' - ');
+        console.error(message);
+        var debugDiv = document.createElement('div');
+        debugDiv.style.position = 'fixed';
+        debugDiv.style.top = '0';
+        debugDiv.style.left = '0';
+        debugDiv.style.background = 'red';
+        debugDiv.style.color = 'white';
+        debugDiv.style.zIndex = '9999';
+        debugDiv.style.fontSize = '12px';
+        debugDiv.style.padding = '10px';
+        debugDiv.innerText = message;
+        document.body.appendChild(debugDiv);
+        return false;
+      };
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
